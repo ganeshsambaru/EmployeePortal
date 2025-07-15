@@ -29,5 +29,12 @@ namespace EmployeePortal.Repositories
             _context.AppUsers.Add(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateAsync(AppUser user)
+        {
+            _context.AppUsers.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

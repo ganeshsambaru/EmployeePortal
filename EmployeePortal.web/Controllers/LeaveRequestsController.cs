@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using EmployeePortal.Data;
+﻿using EmployeePortal.Data;
 using EmployeePortal.Models;
 using EmployeePortal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -17,6 +18,7 @@ namespace EmployeePortal.Controllers
         }
 
         // View all (Admin) or My leaves (Employee)
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var leaves = await _context.LeaveRequests

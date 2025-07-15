@@ -8,5 +8,7 @@ namespace EmployeePortal.Repositories
         Task<AppUser?> GetByUsernameAsync(string username);
         Task<bool> IsUsernameTakenAsync(string username);
         Task RegisterAsync(AppUser user);
+        Task UpdateAsync(AppUser user);
+
     }
 }

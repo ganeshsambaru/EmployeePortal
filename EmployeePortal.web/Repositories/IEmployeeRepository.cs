@@ -17,6 +17,7 @@ namespace EmployeePortal.Repositories
         Task<Dictionary<string, int>> GetDepartmentStatsAsync();
         Task<Dictionary<string, int>> GetMonthlyHireStatsAsync();
         Task<Employee> GetByEmailAsync(string email);
+        Task<Employee?> GetByAppUserNameAsync(string username);
 
 
 

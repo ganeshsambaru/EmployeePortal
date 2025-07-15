@@ -1,7 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using EmployeePortal.Models;
+﻿using EmployeePortal.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EmployeePortal.ViewModels
 {
@@ -16,7 +17,7 @@ namespace EmployeePortal.ViewModels
 
         [Required]
         public AttendanceStatus Status { get; set; }
-
-        public List<Employee> Employees { get; set; } // For dropdown
+        
+        public List<Employee> Employees { get; set; } = new List<Employee>();// For dropdown
     }
 }

@@ -17,7 +17,7 @@ namespace EmployeePortal.Controllers
         {
             _repo = repo;
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string searchName, string department, EmployeeType? employeeType, int page = 1)
         {
             const int pageSize = 5;
@@ -41,19 +41,19 @@ namespace EmployeePortal.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public IActionResult Dashboard()
         {
             return View();
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
@@ -77,7 +77,7 @@ namespace EmployeePortal.Controllers
             TempData["Success"] = "Employee created successfully!";
             return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -100,7 +100,7 @@ namespace EmployeePortal.Controllers
 
             return View(vm);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
         {
@@ -150,7 +150,7 @@ namespace EmployeePortal.Controllers
 
             return View(vm);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -159,7 +159,7 @@ namespace EmployeePortal.Controllers
 
             return View(emp); // You can use the Employee model directly for confirmation
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -270,16 +270,28 @@ namespace EmployeePortal.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            var username = User.Identity.Name;
+            var username = User.Identity?.Name;
 
-            // Assuming username/email matches employee.Email
-            var employee = await _repo.GetByEmailAsync(username); // or GetByUsernameAsync
+            if (string.IsNullOrEmpty(username))
+            {
+                TempData["Error"] = "You are not logged in.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var employee = await _repo.GetByAppUserNameAsync(username);
 
             if (employee == null)
-                return NotFound("Employee profile not found.");
+            {
+                TempData["Error"] = "Employee profile not found.";
+                return RedirectToAction("Dashboard");
+            }
 
             return View(employee);
         }
+
+
+
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> EditProfile()

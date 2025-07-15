@@ -58,8 +58,13 @@
                                         }
                                         <span>@username</span>
                                     </a>
+
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" asp-controller="Employees" asp-action="Profile">My Profile</a></li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Attendance" asp-action="MyAttendance">My Attendance</a>
+                                        </li>
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Change Password</a></li>
                                         <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
                                     </ul>
                                 </div>

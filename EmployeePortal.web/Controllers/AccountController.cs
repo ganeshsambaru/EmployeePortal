@@ -59,6 +59,7 @@ namespace EmployeePortal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Register(RegisterViewModel vm)
         {
             if (!ModelState.IsValid)
@@ -103,10 +104,49 @@ namespace EmployeePortal.Controllers
         }
 
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("MyCookieAuth");
             return RedirectToAction("Login");
+        }
+        [Authorize]
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel vm)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            var username = User.Identity.Name;
+
+            var user = await _accountRepo.GetByUsernameAsync(username);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User not found.");
+                return View(vm);
+            }
+
+            // 🔐 Verify current password
+            if (!BCrypt.Net.BCrypt.Verify(vm.CurrentPassword, user.PasswordHash))
+            {
+                ModelState.AddModelError("CurrentPassword", "Incorrect current password.");
+                return View(vm);
+            }
+
+            // ✅ Hash and update new password
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(vm.NewPassword);
+            await _accountRepo.UpdateAsync(user);  // ⬅️ Make sure this method exists
+
+            TempData["Success"] = "Password changed successfully.";
+            return RedirectToAction("Profile", "Employees");
         }
 
         public IActionResult AccessDenied()

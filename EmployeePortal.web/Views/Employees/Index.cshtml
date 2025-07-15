@@ -66,14 +66,6 @@
 <!-- Add Button -->
 @if (User.IsInRole("Admin"))
 {
-    <a asp-action="Create" class="btn btn-success mb-3">+ Add Employee</a>
-}
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="ExportPdf" class="btn btn-outline-danger mb-3">Export PDF</a>
-}
-@if (User.IsInRole("Admin"))
-{
     <div class="mb-3 d-flex gap-2">
         <a asp-action="Create" class="btn btn-success">+ Add Employee</a>
         <a asp-action="ExportPdf" class="btn btn-outline-danger">Export PDF</a>

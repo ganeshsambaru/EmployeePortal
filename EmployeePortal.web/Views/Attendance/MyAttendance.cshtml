@@ -1,0 +1,37 @@
+﻿@model List<EmployeePortal.Models.Attendance>
+
+@{
+    ViewData["Title"] = "My Attendance";
+}
+
+<h2>My Attendance Records</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info mt-3">No attendance records found.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var record in Model)
+            {
+                <tr>
+                    <td>@record.Date.ToString("dd-MM-yyyy")</td>
+                    <td>@record.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

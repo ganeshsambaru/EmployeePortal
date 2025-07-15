@@ -115,6 +115,12 @@ namespace EmployeePortal.Repositories
         {
             return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
         }
+        public async Task<Employee?> GetByAppUserNameAsync(string username)
+        {
+            return await _context.Employees
+                .Include(e => e.AppUser)
+                .FirstOrDefaultAsync(e => e.AppUser.Username == username);
+        }
 
     }
 }

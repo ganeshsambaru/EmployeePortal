@@ -9,7 +9,7 @@ using Rotativa.AspNetCore;
 
 namespace EmployeePortal.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AttendanceController : Controller
     {
         private readonly EmployeeDbContext _context;
@@ -20,6 +20,7 @@ namespace EmployeePortal.Controllers
         }
 
         // GET: Attendance/Create
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var vm = new AttendanceCreateViewModel
@@ -32,6 +33,7 @@ namespace EmployeePortal.Controllers
         }
 
         // POST: Attendance/Create
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AttendanceCreateViewModel vm)
@@ -64,10 +66,11 @@ namespace EmployeePortal.Controllers
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Attendance marked successfully!";
-            return RedirectToAction("Create");
+            return RedirectToAction("Records");
         }
 
         // GET: Attendance/Records
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Records(int? employeeId, DateTime? fromDate, DateTime? toDate)
         {
             var query = _context.Attendances
@@ -134,6 +137,36 @@ namespace EmployeePortal.Controllers
 
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "AttendanceReport.xlsx");
         }
+
+        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> MyAttendance()
+        {
+            var username = User.Identity?.Name;
+
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Username == username);
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction("Dashboard", "Employees");
+            }
+
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.AppUserId == user.Id);
+            if (employee == null)
+            {
+                TempData["Error"] = "Employee not linked.";
+                return RedirectToAction("Dashboard", "Employees");
+            }
+
+            var records = await _context.Attendances
+                .Where(a => a.EmployeeId == employee.Id)
+                .OrderByDescending(a => a.Date)
+                .ToListAsync();
+
+            return View(records);
+        }
+
+
 
     }
 }
