@@ -1,0 +1,39 @@
+﻿@model EmployeePortal.ViewModels.DashboardStatsViewModel
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white mb-3">
+            <div class="card-body">
+                <h5>Total Employees</h5>
+                <h2>@Model.TotalEmployees</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-success text-white mb-3">
+            <div class="card-body">
+                <h5>Avg Salary</h5>
+                <h2>@Model.AverageSalary.ToString("C")</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-info text-white mb-3">
+            <div class="card-body">
+                <h5>Male Employees</h5>
+                <h2>@Model.MaleCount</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark mb-3">
+            <div class="card-body">
+                <h5>Female Employees</h5>
+                <h2>@Model.FemaleCount</h2>
+            </div>
+        </div>
+    </div>
+</div>

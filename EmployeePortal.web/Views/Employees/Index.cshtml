@@ -1,0 +1,138 @@
+﻿@model EmployeePortal.ViewModels.EmployeeListViewModel
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h2>Employees</h2>
+
+<!-- Search & Filter Form -->
+<form method="get" asp-action="Index" class="row mb-4 g-3 align-items-end">
+    <div class="col-md-4">
+        <label class="form-label">Search by Name</label>
+        <input name="searchName" value="@Model.SearchName" class="form-control" placeholder="Enter name" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Filter by Department</label>
+        <select name="department" class="form-select">
+            <option value="">-- All Departments --</option>
+            @foreach (var dept in Model.AllDepartments)
+            {
+                if (Model.Department == dept)
+                {
+                    @:
+                    <option value="@dept" selected>@dept</option>
+                }
+                else
+                {
+                    @:
+                    <option value="@dept">@dept</option>
+                }
+            }
+        </select>
+
+
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Filter by Employee Type</label>
+        <select name="employeeType" class="form-select">
+            <option value="">-- All Types --</option>
+            @foreach (var type in Enum.GetValues(typeof(EmployeePortal.Models.EmployeeType)))
+            {
+                var value = type.ToString();
+                if (Model.EmployeeType?.ToString() == value)
+                {
+                    @:
+                    <option value="@value" selected>@value</option>
+                }
+                else
+                {
+                    @:
+                    <option value="@value">@value</option>
+                }
+            }
+        </select>
+
+
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+<!-- Add Button -->
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Create" class="btn btn-success mb-3">+ Add Employee</a>
+}
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="ExportPdf" class="btn btn-outline-danger mb-3">Export PDF</a>
+}
+@if (User.IsInRole("Admin"))
+{
+    <div class="mb-3 d-flex gap-2">
+        <a asp-action="Create" class="btn btn-success">+ Add Employee</a>
+        <a asp-action="ExportPdf" class="btn btn-outline-danger">Export PDF</a>
+        <a asp-action="ExportExcel" class="btn btn-outline-success">Export Excel</a>
+    </div>
+}
+
+<!-- Employee Table -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Position</th>
+            <th>Department</th>
+            <th>Type</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model.Employees)
+        {
+            <tr>
+                <td>@emp.FullName</td>
+                <td>@emp.Email</td>
+                <td>@emp.Position</td>
+                <td>@emp.Department</td>
+                <td>@emp.EmployeeType</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@emp.Id" class="btn btn-info btn-sm">View</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-danger btn-sm">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-page="@i"
+                       asp-route-searchName="@Model.SearchName"
+                       asp-route-department="@Model.Department"
+                       asp-route-employeeType="@Model.EmployeeType">
+                        @i
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

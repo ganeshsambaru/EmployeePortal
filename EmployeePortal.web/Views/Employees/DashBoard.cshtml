@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<!-- 👇 Stats ViewComponent -->
+<vc:dashboard-stats></vc:dashboard-stats>
+
+<hr />
+<h3>Employees by Gender</h3>
+<canvas id="genderChart" width="400" height="200"></canvas>
+
+<hr />
+<h3>Employees by Department</h3>
+<canvas id="departmentChart" width="400" height="200"></canvas>
+
+<hr />
+<h3>Monthly Hires (Last 6 Months)</h3>
+<canvas id="hireChart" width="400" height="200"></canvas>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // 🔵 Gender Chart
+        const genderCtx = document.getElementById('genderChart');
+        fetch('/Employees/GetGenderChartData')
+            .then(res => res.json())
+            .then(data => {
+                new Chart(genderCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Employees',
+                            data: data.counts,
+                            backgroundColor: ['#007bff', '#dc3545', '#ffc107']
+                        }]
+                    }
+                });
+            });
+
+        // 🟢 Department Chart
+        const deptCtx = document.getElementById('departmentChart');
+        fetch('/Employees/GetDepartmentChartData')
+            .then(res => res.json())
+            .then(data => {
+                new Chart(deptCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Employees',
+                            data: data.counts,
+                            backgroundColor: '#28a745'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+
+        // 📈 Monthly Hires Line Chart
+        const hireCtx = document.getElementById('hireChart');
+        fetch('/Employees/GetHireChartData')
+            .then(res => res.json())
+            .then(data => {
+                new Chart(hireCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Hires',
+                            data: data.counts,
+                            borderColor: '#007bff',
+                            backgroundColor: '#cce5ff',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+}

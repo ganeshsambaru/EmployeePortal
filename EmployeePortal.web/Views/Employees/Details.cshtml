@@ -1,0 +1,21 @@
+﻿@model EmployeePortal.ViewModels.EmployeeDetailsViewModel
+
+<h2>Employee Details</h2>
+
+<table class="table table-bordered">
+    <tr><th>Full Name</th><td>@Model.FullName</td></tr>
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+    <tr><th>Position</th><td>@Model.Position</td></tr>
+    <tr><th>Department</th><td>@Model.Department</td></tr>
+    <tr><th>Hire Date</th><td>@Model.HireDate.ToShortDateString()</td></tr>
+    <tr><th>Date of Birth</th><td>@Model.DateOfBirth.ToShortDateString()</td></tr>
+    <tr><th>Gender</th><td>@Model.Gender</td></tr>
+    <tr><th>Employee Type</th><td>@Model.EmployeeType</td></tr>
+    <tr><th>Salary</th><td>@Model.Salary.ToString("C")</td></tr>
+</table>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

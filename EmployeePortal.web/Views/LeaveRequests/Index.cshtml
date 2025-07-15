@@ -1,0 +1,70 @@
+﻿@model List<EmployeePortal.Models.LeaveRequest>
+@using EmployeePortal.Models
+
+@{
+    ViewData["Title"] = "Leave Requests";
+}
+
+
+<h2>Leave Requests</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">+ Request Leave</a>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Employee</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Requested On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var leave in Model)
+        {
+            <tr>
+                <td>@leave.EmployeeName</td>
+                <td>@leave.FromDate.ToShortDateString()</td>
+                <td>@leave.ToDate.ToShortDateString()</td>
+                <td>@leave.Reason</td>
+                <td>
+                    @switch (leave.Status)
+                    {
+                        case LeaveStatus.Pending:
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            break;
+                        case LeaveStatus.Approved:
+                            <span class="badge bg-success">Approved</span>
+                            break;
+                        case LeaveStatus.Rejected:
+                            <span class="badge bg-danger">Rejected</span>
+                            break;
+                    }
+                </td>
+                <td>@leave.CreatedDate.ToShortDateString()</td>
+                <td>
+                    @if (User.IsInRole("Admin") && leave.Status == LeaveStatus.Pending)
+                    {
+                        <form asp-action="Approve" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@leave.Id" />
+                            <button class="btn btn-success btn-sm">Approve</button>
+                        </form>
+
+                        <form asp-action="Reject" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@leave.Id" />
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    var isAdmin = User.IsInRole("Admin");
+    var isAuthenticated = User.Identity.IsAuthenticated;
+}
+
+<div class="container mt-5 text-center">
+    <h1 class="mb-4">Welcome to the Employee Portal</h1>
+
+    @if (!isAuthenticated)
+    {
+        <p class="lead">Please <a asp-controller="Account" asp-action="Login">Login</a> or <a asp-controller="Account" asp-action="Register">Register</a> to continue.</p>
+    }
+    else
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card bg-light mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Manage Employees</h4>
+                        <p class="card-text">View, create, edit and delete employee records.</p>
+                        <a asp-controller="Employees" asp-action="Index" class="btn btn-primary">Go to Employee List</a>
+                    </div>
+                </div>
+            </div>
+
+            @if (isAdmin)
+            {
+                <div class="col-md-4">
+                    <div class="card bg-info text-white mb-3">
+                        <div class="card-body">
+                            <h4 class="card-title">Admin Dashboard</h4>
+                            <p class="card-text">View stats and perform admin actions.</p>
+                            <a asp-controller="Employees" asp-action="Dashboard" class="btn btn-light">Go to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

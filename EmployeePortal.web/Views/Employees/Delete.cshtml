@@ -1,0 +1,20 @@
+﻿@model EmployeePortal.Models.Employee
+
+<h2>Confirm Delete</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete <strong>@Model.FullName</strong>?
+</div>
+
+<table class="table table-bordered">
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+    <tr><th>Department</th><td>@Model.Department</td></tr>
+    <tr><th>Position</th><td>@Model.Position</td></tr>
+    <tr><th>Salary</th><td>@Model.Salary.ToString("C")</td></tr>
+</table>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

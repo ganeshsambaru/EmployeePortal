@@ -1,0 +1,87 @@
+﻿@model EmployeePortal.ViewModels.AttendanceFilterViewModel
+@using EmployeePortal.Models
+@{
+    ViewData["Title"] = "Attendance Records";
+}
+
+<h2>Attendance Records</h2>
+@if (User.IsInRole("Admin"))
+{
+    <div class="mb-3 d-flex gap-2">
+        <a asp-action="ExportPdf" class="btn btn-outline-danger">Export PDF</a>
+        <a asp-action="ExportExcel" class="btn btn-outline-success">Export Excel</a>
+    </div>
+}
+
+<!-- Filter Form -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Employee</label>
+        <select name="employeeId" class="form-select">
+            <option value="">-- All --</option>
+            @foreach (var emp in Model.Employees)
+            {
+                if (Model.EmployeeId == emp.Id)
+                {
+                    @:
+                    <option value="@emp.Id" selected>@emp.FullName</option>
+                }
+                else
+                {
+                    @:
+                    <option value="@emp.Id">@emp.FullName</option>
+                }
+            }
+
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">From Date</label>
+        <input name="fromDate" type="date" value="@Model.FromDate?.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">To Date</label>
+        <input name="toDate" type="date" value="@Model.ToDate?.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+
+    <div class="col-md-3 d-grid">
+        <label class="form-label">&nbsp;</label>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+<!-- Attendance Table -->
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Employee</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var record in Model.Records)
+{
+    <tr>
+        <td>@record.Date.ToShortDateString()</td>
+        <td>@record.Employee.FullName</td>
+        <td>
+            @switch (record.Status)
+            {
+                case AttendanceStatus.Present:
+                    <span class="badge bg-success">Present</span>
+                    break;
+                case AttendanceStatus.Absent:
+                    <span class="badge bg-danger">Absent</span>
+                    break;
+                case AttendanceStatus.OnLeave:
+                    <span class="badge bg-warning text-dark">On Leave</span>
+                    break;
+            }
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,43 @@
+﻿@model EmployeePortal.Models.Employee
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<h2>My Profile</h2>
+@if (!string.IsNullOrEmpty(Model.ProfileImagePath))
+{
+    <img src="@Model.ProfileImagePath" alt="Profile Picture" class="img-thumbnail mb-3" style="height: 150px;" />
+}
+
+
+<div class="card shadow p-4">
+    <dl class="row">
+        <dt class="col-sm-3">Full Name</dt>
+        <dd class="col-sm-9">@Model.FullName</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Department</dt>
+        <dd class="col-sm-9">@Model.Department</dd>
+
+        <dt class="col-sm-3">Position</dt>
+        <dd class="col-sm-9">@Model.Position</dd>
+
+        <dt class="col-sm-3">Gender</dt>
+        <dd class="col-sm-9">@Model.Gender</dd>
+
+        <dt class="col-sm-3">Date of Birth</dt>
+        <dd class="col-sm-9">@Model.DateOfBirth.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Hire Date</dt>
+        <dd class="col-sm-9">@Model.HireDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Employee Type</dt>
+        <dd class="col-sm-9">@Model.EmployeeType</dd>
+
+        <dt class="col-sm-3">Salary</dt>
+        <dd class="col-sm-9">₹@Model.Salary</dd>
+    </dl>
+</div>
