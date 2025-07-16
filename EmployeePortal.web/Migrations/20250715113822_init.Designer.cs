@@ -4,6 +4,7 @@ using EmployeePortal.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePortal.web.Migrations
 {
     [DbContext(typeof(EmployeeDbContext))]
-    partial class EmployeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250715113822_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace EmployeePortal.web.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AppUser", b =>
+            modelBuilder.Entity("EmployeePortal.Models.AppUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,7 +33,7 @@ namespace EmployeePortal.web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -119,9 +122,7 @@ namespace EmployeePortal.web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Employees");
                 });
@@ -172,10 +173,9 @@ namespace EmployeePortal.web.Migrations
 
             modelBuilder.Entity("EmployeePortal.Models.Employee", b =>
                 {
-                    b.HasOne("AppUser", "AppUser")
-                        .WithOne()
-                        .HasForeignKey("EmployeePortal.Models.Employee", "AppUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("EmployeePortal.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId");
 
                     b.Navigation("AppUser");
                 });

@@ -354,14 +354,7 @@ namespace EmployeePortal.Controllers
             TempData["Success"] = "Profile updated successfully!";
             return RedirectToAction("Profile");
         }
-
-
-
-
     }
-
-
-
 }
 
 

@@ -1,18 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmployeePortal.Models
+public class AppUser
 {
-    public class AppUser
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        public string Username { get; set; }
+    [Required]
+    public string Username { get; set; }
 
-        [Required]
-        public string PasswordHash { get; set; }
+    [Required]
+    public string Password { get; set; }  // store hashed password
 
-        [Required]
-        public string Role { get; set; }  // "Admin", "User"
-    }
+    [Required]
+    public string Role { get; set; }
 }

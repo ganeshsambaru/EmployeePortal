@@ -58,25 +58,25 @@ void SeedEmployees(WebApplication app)
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<EmployeeDbContext>();
 
-    // ⚠️ TEMP: Delete all existing employees
-    context.Employees.RemoveRange(context.Employees);
-    context.SaveChanges();
-
-    // Now insert fresh test data
-    var sampleEmployees = new List<Employee>
+    // ✅ Seed only if no employees exist
+    if (!context.Employees.Any())
     {
-        new Employee { FullName = "Alice Johnson", Email = "alice@example.com", Position = "HR", Department = "HR", HireDate = DateTime.Now.AddYears(-2), DateOfBirth = new DateTime(1990, 5, 10), Gender = Gender.Female, EmployeeType = EmployeeType.Permanent, Salary = 50000 },
-        new Employee { FullName = "Bob Smith", Email = "bob@example.com", Position = "Developer", Department = "IT", HireDate = DateTime.Now.AddYears(-1), DateOfBirth = new DateTime(1988, 3, 15), Gender = Gender.Male, EmployeeType = EmployeeType.Permanent, Salary = 70000 },
-        new Employee { FullName = "Cathy Brown", Email = "cathy@example.com", Position = "Tester", Department = "QA", HireDate = DateTime.Now.AddMonths(-18), DateOfBirth = new DateTime(1992, 7, 20), Gender = Gender.Female, EmployeeType = EmployeeType.Contract, Salary = 45000 },
-        new Employee { FullName = "David Lee", Email = "david@example.com", Position = "Designer", Department = "UX", HireDate = DateTime.Now.AddMonths(-12), DateOfBirth = new DateTime(1993, 8, 12), Gender = Gender.Male, EmployeeType = EmployeeType.Contract, Salary = 48000 },
-        new Employee { FullName = "Emma Watson", Email = "emma@example.com", Position = "Manager", Department = "Operations", HireDate = DateTime.Now.AddMonths(-8), DateOfBirth = new DateTime(1985, 11, 1), Gender = Gender.Female, EmployeeType = EmployeeType.Permanent, Salary = 90000 },
-        new Employee { FullName = "Frank Green", Email = "frank@example.com", Position = "Support", Department = "IT", HireDate = DateTime.Now.AddMonths(-6), DateOfBirth = new DateTime(1991, 4, 18), Gender = Gender.Male, EmployeeType = EmployeeType.Contract, Salary = 42000 },
-        new Employee { FullName = "Grace Hopper", Email = "grace@example.com", Position = "Architect", Department = "IT", HireDate = DateTime.Now.AddYears(-3), DateOfBirth = new DateTime(1980, 12, 9), Gender = Gender.Female, EmployeeType = EmployeeType.Permanent, Salary = 100000 }
-    };
+        var sampleEmployees = new List<Employee>
+        {
+            new Employee { FullName = "Alice Johnson", Email = "alice@example.com", Position = "HR", Department = "HR", HireDate = DateTime.Now.AddYears(-2), DateOfBirth = new DateTime(1990, 5, 10), Gender = Gender.Female, EmployeeType = EmployeeType.Permanent, Salary = 50000 },
+            new Employee { FullName = "Bob Smith", Email = "bob@example.com", Position = "Developer", Department = "IT", HireDate = DateTime.Now.AddYears(-1), DateOfBirth = new DateTime(1988, 3, 15), Gender = Gender.Male, EmployeeType = EmployeeType.Permanent, Salary = 70000 },
+            new Employee { FullName = "Cathy Brown", Email = "cathy@example.com", Position = "Tester", Department = "QA", HireDate = DateTime.Now.AddMonths(-18), DateOfBirth = new DateTime(1992, 7, 20), Gender = Gender.Female, EmployeeType = EmployeeType.Contract, Salary = 45000 },
+            new Employee { FullName = "David Lee", Email = "david@example.com", Position = "Designer", Department = "UX", HireDate = DateTime.Now.AddMonths(-12), DateOfBirth = new DateTime(1993, 8, 12), Gender = Gender.Male, EmployeeType = EmployeeType.Contract, Salary = 48000 },
+            new Employee { FullName = "Emma Watson", Email = "emma@example.com", Position = "Manager", Department = "Operations", HireDate = DateTime.Now.AddMonths(-8), DateOfBirth = new DateTime(1985, 11, 1), Gender = Gender.Female, EmployeeType = EmployeeType.Permanent, Salary = 90000 },
+            new Employee { FullName = "Frank Green", Email = "frank@example.com", Position = "Support", Department = "IT", HireDate = DateTime.Now.AddMonths(-6), DateOfBirth = new DateTime(1991, 4, 18), Gender = Gender.Male, EmployeeType = EmployeeType.Contract, Salary = 42000 },
+            new Employee { FullName = "Grace Hopper", Email = "grace@example.com", Position = "Architect", Department = "IT", HireDate = DateTime.Now.AddYears(-3), DateOfBirth = new DateTime(1980, 12, 9), Gender = Gender.Female, EmployeeType = EmployeeType.Permanent, Salary = 100000 }
+        };
 
-    context.Employees.AddRange(sampleEmployees);
-    context.SaveChanges();
+        context.Employees.AddRange(sampleEmployees);
+        context.SaveChanges();
+    }
 }
+
 
 
 

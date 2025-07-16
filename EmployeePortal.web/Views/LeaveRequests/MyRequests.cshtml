@@ -1,0 +1,38 @@
+﻿@model List<EmployeePortal.Models.LeaveRequest>
+
+@{
+    ViewData["Title"] = "My Leave Requests";
+}
+
+<h2>My Leave Requests</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No leave requests found.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Applied On</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var leave in Model)
+            {
+                <tr>
+                    <td>@leave.FromDate.ToShortDateString()</td>
+                    <td>@leave.ToDate.ToShortDateString()</td>
+                    <td>@leave.Reason</td>
+                    <td>@leave.Status</td>
+                    <td>@leave.CreatedDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

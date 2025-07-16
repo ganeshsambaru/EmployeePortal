@@ -18,7 +18,7 @@ namespace EmployeePortal.Controllers
         }
 
         // View all (Admin) or My leaves (Employee)
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var leaves = await _context.LeaveRequests
@@ -29,12 +29,14 @@ namespace EmployeePortal.Controllers
         }
 
         // GET: Create
+        [Authorize(Roles = "User")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Create
+        [Authorize(Roles = "User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveRequestCreateViewModel vm)
@@ -60,6 +62,8 @@ namespace EmployeePortal.Controllers
         }
 
         // Approve
+        
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Approve(int id)
         {
@@ -74,6 +78,7 @@ namespace EmployeePortal.Controllers
         }
 
         // Reject
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> Reject(int id)
         {
