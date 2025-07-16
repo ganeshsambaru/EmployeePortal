@@ -8,12 +8,6 @@
 
 <form asp-action="Create" method="post">
     <div class="mb-3">
-        <label asp-for="EmployeeName" class="form-label"></label>
-        <input asp-for="EmployeeName" class="form-control" />
-        <span asp-validation-for="EmployeeName" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
         <label asp-for="FromDate" class="form-label"></label>
         <input asp-for="FromDate" type="date" class="form-control" />
         <span asp-validation-for="FromDate" class="text-danger"></span>
@@ -36,7 +30,5 @@
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeePortal.Models
 {
@@ -15,7 +16,9 @@ namespace EmployeePortal.Models
         public int Id { get; set; }
 
         [Required]
-        public string EmployeeName { get; set; } // For now, just name (we can link to Employee later)
+        public int EmployeeId { get; set; }  // FK
+
+        public Employee Employee { get; set; }  // Navigation property
 
         [Required]
         [DataType(DataType.Date)]

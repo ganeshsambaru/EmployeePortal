@@ -31,7 +31,7 @@
         @foreach (var leave in Model)
         {
             <tr>
-                <td>@leave.EmployeeName</td>
+                <td>@leave.Employee?.FullName</td>
                 <td>@leave.FromDate.ToShortDateString()</td>
                 <td>@leave.ToDate.ToShortDateString()</td>
                 <td>@leave.Reason</td>

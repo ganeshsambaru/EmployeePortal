@@ -19,14 +19,32 @@ namespace EmployeePortal.Controllers
 
         // View all (Admin) or My leaves (Employee)
         [Authorize]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var leaves = await _context.LeaveRequests
-                .OrderByDescending(l => l.CreatedDate)
-                .ToListAsync();
+            var username = User.Identity?.Name;
 
+            var query = _context.LeaveRequests
+                .Include(l => l.Employee)
+                .OrderByDescending(l => l.CreatedDate)
+                .AsQueryable();
+
+            if (User.IsInRole("User"))
+            {
+                var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == username);
+                if (employee == null)
+                {
+                    TempData["Error"] = "Employee not found.";
+                    return RedirectToAction("Dashboard", "Employees");
+                }
+
+                query = query.Where(l => l.EmployeeId == employee.Id);
+            }
+
+            var leaves = await query.ToListAsync();
             return View(leaves);
         }
+
 
         // GET: Create
         [Authorize(Roles = "User")]
@@ -44,9 +62,18 @@ namespace EmployeePortal.Controllers
             if (!ModelState.IsValid)
                 return View(vm);
 
+            var username = User.Identity?.Name;
+            var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Email == username);
+
+            if (employee == null)
+            {
+                TempData["Error"] = "Employee profile not found.";
+                return RedirectToAction("Dashboard", "Employees");
+            }
+
             var request = new LeaveRequest
             {
-                EmployeeName = vm.EmployeeName,
+                EmployeeId = employee.Id,
                 FromDate = vm.FromDate,
                 ToDate = vm.ToDate,
                 Reason = vm.Reason,
@@ -61,8 +88,9 @@ namespace EmployeePortal.Controllers
             return RedirectToAction("Index");
         }
 
+
         // Approve
-        
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Approve(int id)
