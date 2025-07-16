@@ -60,8 +60,17 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EmployeeCreateViewModel vm)
         {
-            if (!ModelState.IsValid)
-                return View(vm);
+            if (!ModelState.IsValid) return View(vm);
+
+            string? imagePath = null;
+            if (vm.ProfileImage != null && vm.ProfileImage.Length > 0)
+            {
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(vm.ProfileImage.FileName)}";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await vm.ProfileImage.CopyToAsync(stream);
+                imagePath = "/uploads/" + fileName;
+            }
 
             var employee = new Employee
             {
@@ -73,13 +82,15 @@ namespace EmployeePortal.Controllers
                 DateOfBirth = vm.DateOfBirth,
                 Gender = vm.Gender,
                 EmployeeType = vm.EmployeeType,
-                Salary = vm.Salary
+                Salary = vm.Salary,
+                ProfileImagePath = imagePath
             };
 
             await _repo.AddAsync(employee);
             TempData["Success"] = "Employee created successfully!";
             return RedirectToAction("Index");
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> EditAdminProfile()
@@ -310,69 +321,67 @@ namespace EmployeePortal.Controllers
 
 
 
-
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> EditProfile()
+        public async Task<IActionResult> Edit(int id)
         {
-            var username = User.Identity.Name;
-            var employee = await _repo.GetByEmailAsync(username);
+            var emp = await _repo.GetByIdAsync(id);
+            if (emp == null) return NotFound();
 
-            if (employee == null) return NotFound();
-
-            var vm = new EditProfileViewModel
+            var vm = new EmployeeEditViewModel
             {
-                Id = employee.Id,
-                FullName = employee.FullName,
-                Email = employee.Email,
-                Department = employee.Department,
-                Position = employee.Position,
-                DateOfBirth = employee.DateOfBirth
+                Id = emp.Id,
+                FullName = emp.FullName,
+                Email = emp.Email,
+                Position = emp.Position,
+                Department = emp.Department,
+                HireDate = emp.HireDate,
+                DateOfBirth = emp.DateOfBirth,
+                Gender = emp.Gender,
+                EmployeeType = emp.EmployeeType,
+                Salary = emp.Salary,
+                ProfileImagePath = emp.ProfileImagePath
             };
 
             return View(vm);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-
-        public async Task<IActionResult> EditProfile(EditProfileViewModel vm)
+        public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
         {
-            if (!ModelState.IsValid)
-                return View(vm);
+            if (id != vm.Id) return NotFound();
+            if (!ModelState.IsValid) return View(vm);
 
-            var employee = await _repo.GetByIdAsync(vm.Id);
-            if (employee == null) return NotFound();
+            var emp = await _repo.GetByIdAsync(id);
+            if (emp == null) return NotFound();
 
-            employee.FullName = vm.FullName;
-            employee.Email = vm.Email;
-            employee.Department = vm.Department;
-            employee.Position = vm.Position;
+            emp.FullName = vm.FullName;
+            emp.Email = vm.Email;
+            emp.Position = vm.Position;
+            emp.Department = vm.Department;
+            emp.HireDate = vm.HireDate;
+            emp.DateOfBirth = vm.DateOfBirth;
+            emp.Gender = vm.Gender;
+            emp.EmployeeType = vm.EmployeeType;
+            emp.Salary = vm.Salary;
 
-            if (vm.DateOfBirth.HasValue)
-                employee.DateOfBirth = vm.DateOfBirth.Value;
-
-            // ✅ Save profile picture if uploaded
             if (vm.ProfileImage != null && vm.ProfileImage.Length > 0)
             {
                 var fileName = $"{Guid.NewGuid()}{Path.GetExtension(vm.ProfileImage.FileName)}";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await vm.ProfileImage.CopyToAsync(stream);
-                }
-
-                employee.ProfileImagePath = "/uploads/" + fileName;
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await vm.ProfileImage.CopyToAsync(stream);
+                emp.ProfileImagePath = "/uploads/" + fileName;
             }
 
-            await _repo.UpdateAsync(employee);
-
-            TempData["Success"] = "Profile updated successfully!";
-            return RedirectToAction("Profile");
+            await _repo.UpdateAsync(emp);
+            TempData["Success"] = "Employee updated successfully!";
+            return RedirectToAction("Index");
         }
+
+
     }
 }
 

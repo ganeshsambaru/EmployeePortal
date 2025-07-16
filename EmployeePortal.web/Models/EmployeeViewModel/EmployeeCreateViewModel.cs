@@ -26,5 +26,7 @@ namespace EmployeePortal.ViewModels
         public EmployeeType EmployeeType { get; set; }
         [Precision(18, 2)]
         public decimal Salary { get; set; }
+        public IFormFile? ProfileImage { get; set; }
+        public string? ProfileImagePath { get; set; }
     }
 }
