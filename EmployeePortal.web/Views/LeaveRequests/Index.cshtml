@@ -7,8 +7,12 @@
 
 
 <h2>Leave Requests</h2>
+@* Only show for Users *@
+@if (User.IsInRole("User"))
+{
+    <a asp-action="Create" class="btn btn-success mb-3">+ Request Leave</a>
+}
 
-<a asp-action="Create" class="btn btn-success mb-3">+ Request Leave</a>
 
 @if (TempData["Success"] != null)
 {

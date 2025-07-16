@@ -1,0 +1,16 @@
+﻿@model EmployeePortal.ViewModels.AdminProfileViewModel
+@{
+    ViewData["Title"] = "Admin Profile";
+}
+<h2>Admin Profile</h2>
+
+<div class="card">
+    <div class="card-body">
+        <img src="@Model.ProfileImagePath" class="rounded-circle mb-3" style="width:80px;height:80px;" alt="No Image" />
+        <p><strong>Username:</strong> @Model.Username</p>
+        <p><strong>Full Name:</strong> @Model.FullName</p>
+        <p><strong>Role:</strong> @Model.Role</p>
+
+        <a asp-action="EditAdminProfile" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>

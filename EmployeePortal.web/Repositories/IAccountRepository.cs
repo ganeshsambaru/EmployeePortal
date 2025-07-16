@@ -15,5 +15,9 @@ namespace EmployeePortal.Repositories
 
         Task UpdateAsync(AppUser user);
 
+        Task<AppUser> GetByUsernameOnlyAsync(string username);
+        Task UpdateAdminAsync(AppUser user);
+
+
     }
 }

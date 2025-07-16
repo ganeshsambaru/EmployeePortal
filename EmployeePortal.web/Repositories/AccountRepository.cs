@@ -49,5 +49,17 @@ namespace EmployeePortal.Repositories
 
             return null;
         }
+
+        public async Task<AppUser> GetByUsernameOnlyAsync(string username)
+        {
+            return await _context.AppUsers.FirstOrDefaultAsync(u => u.Username == username && u.Role == "Admin");
+        }
+
+        public async Task UpdateAdminAsync(AppUser user)
+        {
+            _context.AppUsers.Update(user);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

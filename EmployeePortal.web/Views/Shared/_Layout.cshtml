@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using EmployeePortal.Models
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,23 +13,20 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-            <div class="container">
+            <div class="container d-flex align-items-center">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EmployeePortal.web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                        aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Employees" asp-action="Index">Employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="LeaveRequests" asp-action="Index">Leave</a>
-                        </li>
 
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Employees" asp-action="Index">Employees</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
                                     Attendance
@@ -35,48 +34,70 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="Attendance" asp-action="Create">Mark Attendance</a></li>
                                     <li><a class="dropdown-item" asp-controller="Attendance" asp-action="Records">View Attendance</a></li>
+                                    <li><a class="dropdown-item" asp-controller="LeaveRequests" asp-action="Index">Leave Requests</a></li>
                                 </ul>
                             </li>
                         }
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="LeaveRequests" asp-action="Index">My Leave</a>
+                            </li>
+                        }
+                    </ul>
 
-                        <li class="nav-item ms-auto">
-                            @if (User.Identity.IsAuthenticated)
+                    <ul class="navbar-nav ms-auto d-flex align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var username = User.Identity.Name;
+                            var db = Context.RequestServices.GetService<EmployeePortal.Data.EmployeeDbContext>();
+                            var user = db.Employees.FirstOrDefault(e => e.Email == username);
+                            if (user == null)
                             {
-                                var username = User.Identity.Name;
-                                var db = Context.RequestServices.GetService<EmployeePortal.Data.EmployeeDbContext>();
-                                var user = db.Employees.FirstOrDefault(e => e.Email == username);
-
-                                <div class="dropdown">
-                                    <a class="nav-link dropdown-toggle d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown">
-                                        @if (!string.IsNullOrEmpty(user?.ProfileImagePath))
-                                        {
-                                            <img src="@user.ProfileImagePath" class="rounded-circle me-2" style="width: 35px; height: 35px;" alt="Profile" />
-                                        }
-                                        else
-                                        {
-                                            <span class="me-2 text-secondary">👤</span>
-                                        }
-                                        <span>@username</span>
-                                    </a>
-
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" asp-controller="Employees" asp-action="Profile">My Profile</a></li>
-                                        <li>
-                                            <a class="dropdown-item" asp-controller="Attendance" asp-action="MyAttendance">My Attendance</a>
-                                        </li>
-                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Change Password</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
-                                    </ul>
-                                </div>
+                                var appUser = db.AppUsers.FirstOrDefault(u => u.Username == username);
+                                if (appUser != null)
+                                {
+                                    user = new Employee
+                                    {
+                                        FullName = appUser.FullName ?? appUser.Username,
+                                        Email = appUser.Username,
+                                        ProfileImagePath = appUser.ProfileImagePath
+                                    };
+                                }
                             }
-                            else
-                            {
-                                <div class="d-flex">
-                                    <a class="nav-link text-light" asp-controller="Account" asp-action="Login">Login</a>
-                                    <a class="nav-link text-light" asp-controller="Account" asp-action="Register">Register</a>
-                                </div>
-                            }
-                        </li>
+
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown">
+                                    @if (!string.IsNullOrEmpty(user?.ProfileImagePath))
+                                    {
+                                        <img src="@user.ProfileImagePath" class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;" alt="Profile" />
+                                    }
+                                    else
+                                    {
+                                        <span class="me-2 text-secondary">👤</span>
+                                    }
+                                    <span>@username</span>
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Employees" asp-action="Profile">My Profile</a></li>
+
+                                    @if (User.IsInRole("User"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Attendance" asp-action="MyAttendance">My Attendance</a></li>
+                                    }
+
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="ChangePassword">Change Password</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li><a class="nav-link text-light" asp-controller="Account" asp-action="Login">Login</a></li>
+                            <li><a class="nav-link text-light" asp-controller="Account" asp-action="Register">Register</a></li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -108,6 +129,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
 </html>

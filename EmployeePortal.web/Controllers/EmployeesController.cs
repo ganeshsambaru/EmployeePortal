@@ -12,11 +12,14 @@ namespace EmployeePortal.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeRepository _repo;
+        private readonly IAccountRepository _accountRepo;
 
-        public EmployeesController(IEmployeeRepository repo)
+        public EmployeesController(IEmployeeRepository repo, IAccountRepository accountRepo)
         {
             _repo = repo;
+            _accountRepo = accountRepo;
         }
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string searchName, string department, EmployeeType? employeeType, int page = 1)
         {
@@ -79,53 +82,58 @@ namespace EmployeePortal.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> EditAdminProfile()
         {
-            var emp = await _repo.GetByIdAsync(id);
-            if (emp == null) return NotFound();
+            var username = User.Identity?.Name;
+            var user = await _accountRepo.GetByUsernameAsync(username);
 
-            var vm = new EmployeeEditViewModel
+            if (user == null)
             {
-                Id = emp.Id,
-                FullName = emp.FullName,
-                Email = emp.Email,
-                Position = emp.Position,
-                Department = emp.Department,
-                HireDate = emp.HireDate,
-                DateOfBirth = emp.DateOfBirth,
-                Gender = emp.Gender,
-                EmployeeType = emp.EmployeeType,
-                Salary = emp.Salary
+                TempData["Error"] = "Admin profile not found.";
+                return RedirectToAction("Dashboard", "Employees");
+            }
+
+            var vm = new AdminProfileViewModel
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                FullName = user.FullName,
+                ProfileImagePath = user.ProfileImagePath
             };
 
             return View(vm);
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, EmployeeEditViewModel vm)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditAdmin(AdminProfileViewModel vm)
         {
-            if (id != vm.Id) return NotFound();
-
             if (!ModelState.IsValid)
                 return View(vm);
 
-            var emp = await _repo.GetByIdAsync(id);
-            if (emp == null) return NotFound();
+            var user = await _accountRepo.GetByUsernameAsync(User.Identity.Name);
+            if (user == null) return NotFound();
 
-            emp.FullName = vm.FullName;
-            emp.Email = vm.Email;
-            emp.Position = vm.Position;
-            emp.Department = vm.Department;
-            emp.HireDate = vm.HireDate;
-            emp.DateOfBirth = vm.DateOfBirth;
-            emp.Gender = vm.Gender;
-            emp.EmployeeType = vm.EmployeeType;
-            emp.Salary = vm.Salary;
+            user.FullName = vm.FullName;
 
-            await _repo.UpdateAsync(emp);
-            TempData["Success"] = "Employee updated successfully!";
-            return RedirectToAction("Index");
+            if (vm.ProfileImage != null && vm.ProfileImage.Length > 0)
+            {
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(vm.ProfileImage.FileName)}";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
 
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await vm.ProfileImage.CopyToAsync(stream);
+                }
+
+                user.ProfileImagePath = "/uploads/" + fileName;
+            }
+
+            await _accountRepo.UpdateAsync(user);
+
+            TempData["Success"] = "Admin profile updated successfully!";
+            return RedirectToAction("Profile");
         }
 
         [HttpGet]
@@ -272,14 +280,25 @@ namespace EmployeePortal.Controllers
         {
             var username = User.Identity?.Name;
 
-            if (string.IsNullOrEmpty(username))
+            if (User.IsInRole("Admin"))
             {
-                TempData["Error"] = "You are not logged in.";
-                return RedirectToAction("Login", "Account");
+                var admin = await _accountRepo.GetByUsernameOnlyAsync(username);
+                if (admin == null) return NotFound();
+
+                var vm = new AdminProfileViewModel
+                {
+                    Id = admin.Id,
+                    Username = admin.Username,
+                    Role = admin.Role,
+                    FullName = admin.FullName,
+                    ProfileImagePath = admin.ProfileImagePath
+                };
+
+                return View("AdminProfile", vm);
             }
 
+            // Regular employee
             var employee = await _repo.GetByAppUserNameAsync(username);
-
             if (employee == null)
             {
                 TempData["Error"] = "Employee profile not found.";

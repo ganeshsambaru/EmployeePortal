@@ -37,6 +37,16 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage(); // shows full error
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
 
 app.UseRouting();
 
