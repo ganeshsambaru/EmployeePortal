@@ -11,6 +11,10 @@ namespace EmployeePortal.Data
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Payslip> Payslips { get; set; }
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

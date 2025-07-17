@@ -1,0 +1,37 @@
+﻿@model List<EmployeePortal.Models.Payslip>
+@{
+    ViewData["Title"] = "My Payslips";
+}
+
+<h2>My Payslips</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Gross Salary</th>
+                <th>Deductions</th>
+                <th>Net Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var payslip in Model)
+            {
+                <tr>
+                    <td>@payslip.Month</td>
+                    <td>@payslip.Year</td>
+                    <td>@payslip.GrossSalary</td>
+                    <td>@payslip.Deductions</td>
+                    <td>@payslip.NetSalary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">No payslips found.</div>
+}

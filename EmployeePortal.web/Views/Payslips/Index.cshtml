@@ -1,0 +1,40 @@
+﻿@model List<EmployeePortal.Models.Payslip>
+@{
+    ViewData["Title"] = "Payslip List";
+}
+
+<h2>Payslip List</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Generate New Payslip</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Employee</th>
+            <th>Month</th>
+            <th>Year</th>
+            <th>Gross Salary</th>
+            <th>Deductions</th>
+            <th>Net Salary</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payslip in Model)
+        {
+            <tr>
+                <td>@payslip.Employee.FullName</td>
+                <td>@payslip.Month</td>
+                <td>@payslip.Year</td>
+                <td>@payslip.GrossSalary</td>
+                <td>@payslip.Deductions</td>
+                <td>@payslip.NetSalary</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@payslip.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@payslip.Id" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@payslip.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

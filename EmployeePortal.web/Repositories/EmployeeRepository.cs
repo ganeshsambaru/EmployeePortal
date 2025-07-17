@@ -77,12 +77,18 @@ namespace EmployeePortal.Repositories
                 .OrderBy(d => d)
                 .ToListAsync();
         }
+
         public async Task<Dictionary<string, int>> GetGenderStatsAsync()
         {
-            return await _context.Employees
+            var employees = await _context.Employees.ToListAsync(); // Load all data in memory
+
+            var result = employees
                 .GroupBy(e => e.Gender.ToString())
-                .ToDictionaryAsync(g => g.Key, g => g.Count());
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            return result;
         }
+
 
         public async Task<Dictionary<string, int>> GetDepartmentStatsAsync()
         {
@@ -90,37 +96,45 @@ namespace EmployeePortal.Repositories
                 .GroupBy(e => e.Department)
                 .ToDictionaryAsync(g => g.Key, g => g.Count());
         }
+
+
         public async Task<Dictionary<string, int>> GetMonthlyHireStatsAsync()
         {
             var now = DateTime.Now;
             var sixMonthsAgo = now.AddMonths(-5);
 
-            var data = await _context.Employees
+            // Pull employees first from database
+            var employees = await _context.Employees
                 .Where(e => e.HireDate >= sixMonthsAgo)
-                .GroupBy(e => e.HireDate.ToString("MMM yyyy"))
-                .OrderBy(g => g.Key)
-                .ToDictionaryAsync(g => g.Key, g => g.Count());
+                .ToListAsync(); // DB call ends here
 
-            // Fill missing months with 0
+            // Group and project in memory
+            var hires = employees
+                .GroupBy(e => e.HireDate.ToString("MMM yyyy"))
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            // Fill missing months
             var result = new Dictionary<string, int>();
             for (int i = 0; i < 6; i++)
             {
                 var month = now.AddMonths(-i).ToString("MMM yyyy");
-                result[month] = data.ContainsKey(month) ? data[month] : 0;
+                result[month] = hires.ContainsKey(month) ? hires[month] : 0;
             }
 
             return result.Reverse().ToDictionary(x => x.Key, x => x.Value);
         }
+
+
         public async Task<Employee> GetByEmailAsync(string email)
         {
             return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
         }
+
         public async Task<Employee?> GetByAppUserNameAsync(string username)
         {
             return await _context.Employees
                 .Include(e => e.AppUser)
                 .FirstOrDefaultAsync(e => e.AppUser.Username == username);
         }
-
     }
 }

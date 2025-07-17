@@ -3,6 +3,7 @@ using EmployeePortal.Repositories;
 using EmployeePortal.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 
@@ -43,8 +44,7 @@ namespace EmployeePortal.Controllers
             return View(vm);
         }
 
-
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Dashboard()
         {
             return View();
@@ -379,6 +379,25 @@ namespace EmployeePortal.Controllers
             await _repo.UpdateAsync(emp);
             TempData["Success"] = "Employee updated successfully!";
             return RedirectToAction("Index");
+        }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            var username = User.Identity?.Name;
+            if (!string.IsNullOrEmpty(username))
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    var admin = _accountRepo.GetByUsernameOnlyAsync(username).Result;
+                    ViewBag.ProfileImagePath = admin?.ProfileImagePath ?? "/images/default-user.png";
+                }
+                else
+                {
+                    var emp = _repo.GetByAppUserNameAsync(username).Result;
+                    ViewBag.ProfileImagePath = emp?.ProfileImagePath ?? "/images/default-user.png";
+                }
+            }
+
+            base.OnActionExecuting(context);
         }
 
 

@@ -27,6 +27,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-controller="Employees" asp-action="Index">Employees</a>
                             </li>
+
+                            <!-- 👇 Payslips for Admin -->
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Payslips" asp-action="Index">Payslips</a>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
                                     Attendance
@@ -37,15 +43,20 @@
                                     <li><a class="dropdown-item" asp-controller="LeaveRequests" asp-action="Index">Leave Requests</a></li>
                                 </ul>
                             </li>
+
                         }
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-controller="LeaveRequests" asp-action="Index">My Leave</a>
                             </li>
+
+                            <!-- 👇 Payslips for User -->
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Payslips" asp-action="MyPayslips">My Payslips</a>
+                            </li>
                         }
                     </ul>
-
                     <ul class="navbar-nav ms-auto d-flex align-items-center">
                         @if (User.Identity.IsAuthenticated)
                         {
@@ -65,7 +76,6 @@
                                     };
                                 }
                             }
-
 
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center text-light" href="#" role="button" data-bs-toggle="dropdown">
@@ -99,6 +109,9 @@
                             <li><a class="nav-link text-light" asp-controller="Account" asp-action="Register">Register</a></li>
                         }
                     </ul>
+
+                    
+                          
                 </div>
             </div>
         </nav>

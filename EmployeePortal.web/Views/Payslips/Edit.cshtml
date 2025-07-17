@@ -1,0 +1,44 @@
+﻿@model EmployeePortal.ViewModels.PayslipViewModel
+@{
+    ViewData["Title"] = "Edit Payslip";
+}
+
+<h2>Edit Payslip</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="EmployeeId" class="form-label">Employee</label>
+        <select asp-for="EmployeeId" asp-items="Model.EmployeeList" class="form-select" disabled></select>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Month" class="form-label"></label>
+            <input asp-for="Month" class="form-control" />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Year" class="form-label"></label>
+            <input asp-for="Year" class="form-control" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GrossSalary" class="form-label"></label>
+        <input asp-for="GrossSalary" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Deductions" class="form-label"></label>
+        <input asp-for="Deductions" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NetSalary" class="form-label"></label>
+        <input asp-for="NetSalary" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

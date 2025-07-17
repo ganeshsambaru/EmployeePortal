@@ -12,17 +12,28 @@
 <!-- 👇 Stats ViewComponent -->
 <vc:dashboard-stats></vc:dashboard-stats>
 
-<hr />
-<h3>Employees by Gender</h3>
-<canvas id="genderChart" width="400" height="200"></canvas>
 
-<hr />
-<h3>Employees by Department</h3>
-<canvas id="departmentChart" width="400" height="200"></canvas>
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">Employees by Gender</div>
+    <div class="card-body text-center">
+        <canvas id="genderChart" class="chart-small"></canvas>
+    </div>
+</div>
 
-<hr />
-<h3>Monthly Hires (Last 6 Months)</h3>
-<canvas id="hireChart" width="400" height="200"></canvas>
+<div class="card mb-4">
+    <div class="card-header bg-success text-white">Employees by Department</div>
+    <div class="card-body text-center">
+        <canvas id="departmentChart" class="chart-small"></canvas>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header bg-info text-white">Monthly Hires (Last 6 Months)</div>
+    <div class="card-body text-center">
+        <canvas id="hireChart" class="chart-small"></canvas>
+    </div>
+</div>
+
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

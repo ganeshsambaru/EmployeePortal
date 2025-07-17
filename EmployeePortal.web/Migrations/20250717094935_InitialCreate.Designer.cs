@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeePortal.web.Migrations
 {
     [DbContext(typeof(EmployeeDbContext))]
-    [Migration("20250716095929_UpdateLeaveRequestModel")]
-    partial class UpdateLeaveRequestModel
+    [Migration("20250717094935_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,14 @@ namespace EmployeePortal.web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -163,6 +169,44 @@ namespace EmployeePortal.web.Migrations
                     b.ToTable("LeaveRequests");
                 });
 
+            modelBuilder.Entity("EmployeePortal.Models.Payslip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Bonus")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Deductions")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Payslips");
+                });
+
             modelBuilder.Entity("EmployeePortal.Models.Attendance", b =>
                 {
                     b.HasOne("EmployeePortal.Models.Employee", "Employee")
@@ -185,6 +229,17 @@ namespace EmployeePortal.web.Migrations
                 });
 
             modelBuilder.Entity("EmployeePortal.Models.LeaveRequest", b =>
+                {
+                    b.HasOne("EmployeePortal.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("EmployeePortal.Models.Payslip", b =>
                 {
                     b.HasOne("EmployeePortal.Models.Employee", "Employee")
                         .WithMany()
