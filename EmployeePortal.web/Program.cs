@@ -2,6 +2,8 @@ using EmployeePortal.Data;
 using EmployeePortal.Models;
 using EmployeePortal.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
+using ServiceStack.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,9 @@ else
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+RotativaConfiguration.Setup(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Rotativa"));
+
 
 
 

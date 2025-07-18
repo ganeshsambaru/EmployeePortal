@@ -3,35 +3,43 @@
     ViewData["Title"] = "My Payslips";
 }
 
-<h2>My Payslips</h2>
+<h2 class="text-center my-4">My Payslips</h2>
 
 @if (Model.Any())
 {
-    <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Month</th>
-                <th>Year</th>
-                <th>Gross Salary</th>
-                <th>Deductions</th>
-                <th>Net Salary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var payslip in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow rounded">
+            <thead class="table-dark">
                 <tr>
-                    <td>@payslip.Month</td>
-                    <td>@payslip.Year</td>
-                    <td>@payslip.GrossSalary</td>
-                    <td>@payslip.Deductions</td>
-                    <td>@payslip.NetSalary</td>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Gross Salary</th>
+                    <th>Deductions</th>
+                    <th>Net Salary</th>
+                    <th>Download</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var payslip in Model)
+                {
+                    <tr>
+                        <td>@payslip.Month</td>
+                        <td>@payslip.Year</td>
+                        <td>₹ @payslip.GrossSalary.ToString("N2")</td>
+                        <td>₹ @payslip.Deductions.ToString("N2")</td>
+                        <td>₹ @payslip.NetSalary.ToString("N2")</td>
+                        <td>
+                            <a asp-action="DownloadPdf" asp-route-id="@payslip.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-file-earmark-pdf"></i> DOWNLOAD PDF
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
-    <div class="alert alert-info">No payslips found.</div>
+    <div class="alert alert-info text-center">No payslips available at the moment.</div>
 }

@@ -4,6 +4,8 @@ using EmployeePortal.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Rotativa.AspNetCore;
 
 namespace EmployeePortal.Controllers
 {
@@ -126,8 +128,17 @@ namespace EmployeePortal.Controllers
         public async Task<IActionResult> Edit(int id, PayslipViewModel vm)
         {
             if (id != vm.Id) return BadRequest();
+
             if (!ModelState.IsValid)
             {
+                ViewBag.Employees = await _employeeRepo.GetAllAsync();
+                return View(vm);
+            }
+
+            var employee = await _employeeRepo.GetByIdAsync(vm.EmployeeId);
+            if (employee == null)
+            {
+                ModelState.AddModelError("EmployeeId", "Selected employee does not exist.");
                 ViewBag.Employees = await _employeeRepo.GetAllAsync();
                 return View(vm);
             }
@@ -159,5 +170,46 @@ namespace EmployeePortal.Controllers
             TempData["Success"] = "Payslip deleted successfully!";
             return RedirectToAction("Index");
         }
+
+       
+
+public async Task<IActionResult> DownloadPdf(int id)
+    {
+        var payslip = await _payslipRepo.GetByIdAsync(id);
+        if (payslip == null)
+            return NotFound();
+
+        // Include Employee details (if not already loaded)
+        payslip.Employee = await _employeeRepo.GetByIdAsync(payslip.EmployeeId);
+
+        return new ViewAsPdf("PayslipPdf", payslip)
+        {
+            FileName = $"Payslip_{payslip.Employee.FullName}_{payslip.Month}_{payslip.Year}.pdf"
+        };
+    }
+        [Authorize]
+        public async Task<IActionResult> Details(int id)
+        {
+            var payslip = await _payslipRepo.GetByIdAsync(id);
+            if (payslip == null)
+                return NotFound();
+
+            var vm = new PayslipViewModel
+            {
+                Id = payslip.Id,
+                EmployeeId = payslip.EmployeeId,
+                Salary = payslip.Salary,
+                Bonus = payslip.Bonus,
+                Deductions = payslip.Deductions,
+                Month = payslip.Month,
+                Year = payslip.Year,
+                Remarks = payslip.Remarks,
+                // Include more fields if needed
+            };
+
+            return View(vm);
+        }
+
+
     }
 }

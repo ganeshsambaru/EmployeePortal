@@ -7,36 +7,49 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="EmployeeId" />
 
     <div class="mb-3">
         <label asp-for="EmployeeId" class="form-label">Employee</label>
         <select asp-for="EmployeeId" asp-items="Model.EmployeeList" class="form-select" disabled></select>
+        <span asp-validation-for="EmployeeId" class="text-danger"></span>
     </div>
 
     <div class="row">
         <div class="col-md-6 mb-3">
             <label asp-for="Month" class="form-label"></label>
             <input asp-for="Month" class="form-control" />
+            <span asp-validation-for="Month" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
             <label asp-for="Year" class="form-label"></label>
             <input asp-for="Year" class="form-control" />
+            <span asp-validation-for="Year" class="text-danger"></span>
         </div>
     </div>
 
     <div class="mb-3">
-        <label asp-for="GrossSalary" class="form-label"></label>
-        <input asp-for="GrossSalary" class="form-control" />
+        <label asp-for="Salary" class="form-label"></label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Bonus" class="form-label"></label>
+        <input asp-for="Bonus" class="form-control" />
+        <span asp-validation-for="Bonus" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Deductions" class="form-label"></label>
         <input asp-for="Deductions" class="form-control" />
+        <span asp-validation-for="Deductions" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="NetSalary" class="form-label"></label>
-        <input asp-for="NetSalary" class="form-control" />
+        <label asp-for="Remarks" class="form-label"></label>
+        <textarea asp-for="Remarks" class="form-control"></textarea>
+        <span asp-validation-for="Remarks" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Update</button>

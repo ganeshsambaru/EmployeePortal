@@ -1,0 +1,18 @@
+﻿@model EmployeePortal.Models.Payslip
+
+@{
+    Layout = null; // No layout for clean PDF
+}
+
+<div style="font-family: Arial; padding: 20px;">
+    <h2 style="text-align: center;">Salary Payslip</h2>
+    <hr />
+    <p><strong>Employee Name:</strong> @Model.Employee.FullName</p>
+    <p><strong>Month:</strong> @Model.Month</p>
+    <p><strong>Year:</strong> @Model.Year</p>
+    <p><strong>Salary:</strong> ₹@Model.Salary</p>
+    <p><strong>Bonus:</strong> ₹@Model.Bonus</p>
+    <p><strong>Deductions:</strong> ₹@Model.Deductions</p>
+    <p><strong>Net Salary:</strong> ₹@Model.NetSalary</p>
+    <p><strong>Remarks:</strong> @Model.Remarks</p>
+</div>

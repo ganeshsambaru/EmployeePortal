@@ -1,4 +1,5 @@
-﻿@model EmployeePortal.Models.Payslip
+﻿@using EmployeePortal.Models
+@model EmployeePortal.Models.Payslip
 @{
     ViewData["Title"] = "Payslip Details";
 }
@@ -24,6 +25,8 @@
             <dt class="col-sm-3">Net Salary</dt>
             <dd class="col-sm-9">@Model.NetSalary</dd>
         </dl>
+        
+
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>
