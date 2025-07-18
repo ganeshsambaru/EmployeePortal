@@ -4,38 +4,60 @@
     var isAuthenticated = User.Identity.IsAuthenticated;
 }
 
-<div class="container mt-5 text-center">
-    <h1 class="mb-4">Welcome to the Employee Portal</h1>
+<style>
+    body {
+        background-image: url('https://t3.ftcdn.net/jpg/02/11/09/58/240_F_211095871_r74aavHAmiLk8xeCuL3SBfnOivgsj0ZQ.jpg'); /* Change to your actual path */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+        color: white;
+    }
+
+    .content-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+        .content-center h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .content-center p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px #000;
+        }
+
+        .content-center a.btn {
+            margin: 0 10px;
+            padding: 10px 25px;
+        }
+</style>
+
+<div class="content-center">
+    <h1>👋 Welcome to the Employee Portal</h1>
+    <p>Manage your workforce efficiently.</p>
 
     @if (!isAuthenticated)
     {
-        <p class="lead">Please <a asp-controller="Account" asp-action="Login">Login</a> or <a asp-controller="Account" asp-action="Register">Register</a> to continue.</p>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light">Login</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light">Register</a>
     }
     else
     {
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card bg-light mb-3">
-                    <div class="card-body">
-                        <h4 class="card-title">Manage Employees</h4>
-                        <p class="card-text">View, create, edit and delete employee records.</p>
-                        <a asp-controller="Employees" asp-action="Index" class="btn btn-primary">Go to Employee List</a>
-                    </div>
-                </div>
-            </div>
+        <a asp-controller="Employees" asp-action="Index" class="btn btn-primary">Employee List</a>
 
-            @if (isAdmin)
-            {
-                <div class="col-md-4">
-                    <div class="card bg-info text-white mb-3">
-                        <div class="card-body">
-                            <h4 class="card-title">Admin Dashboard</h4>
-                            <p class="card-text">View stats and perform admin actions.</p>
-                            <a asp-controller="Employees" asp-action="Dashboard" class="btn btn-light">Go to Dashboard</a>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
+        @if (isAdmin)
+        {
+            <a asp-controller="Employees" asp-action="Dashboard" class="btn btn-warning text-dark">Admin Dashboard</a>
+        }
     }
 </div>

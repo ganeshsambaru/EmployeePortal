@@ -1,52 +1,119 @@
 ﻿@model EmployeePortal.ViewModels.RegisterViewModel
-
 @{
+    Layout = null;
     ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Employee Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background: url('https://images.hdqwalls.com/wallpapers/macos-rancho-cucamonga-tree-cm.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-<form asp-action="Register" method="post">
-    <div class="mb-3">
-        <label asp-for="FullName" class="form-label"></label>
-        <input asp-for="FullName" class="form-control" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
+        .page-title {
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+        }
+
+        .register-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+            .register-box h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #333;
+            }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 10px;
+            border-radius: 30px;
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+            .btn-register:hover {
+                background: #218838;
+            }
+
+        .btn-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007bff;
+        }
+
+        ::placeholder {
+            color: #888;
+        }
+
+        .text-danger {
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-title">Welcome To EmployeePortal</div>
+
+    <div class="register-box">
+        <h2>Register</h2>
+        <form asp-action="Register" method="post">
+            <input asp-for="FullName" class="form-control" placeholder="Full Name" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+
+            <input asp-for="Username" class="form-control" placeholder="Username" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+
+            <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+
+            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+            <select asp-for="Role" class="form-select">
+                <option value="">-- Select Role --</option>
+                <option>Admin</option>
+                <option>User</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+
+            <button type="submit" class="btn-register">Register</button>
+
+            <a asp-action="Login" class="btn-link">Already have an account? Login</a>
+        </form>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Username" class="form-label"></label>
-        <input asp-for="Username" class="form-control" />
-        <span asp-validation-for="Username" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ConfirmPassword" class="form-label"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Role" class="form-label"></label>
-        <select asp-for="Role" class="form-select">
-            <option value="">-- Select Role --</option>
-            <option>Admin</option>
-            <option>User</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Register</button>
-    <a asp-action="Login" class="btn btn-link">Already have an account? Login</a>
-</form>
-
-@section Scripts {
-@{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+</body>
+</html>

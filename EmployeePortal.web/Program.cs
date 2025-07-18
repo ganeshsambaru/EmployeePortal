@@ -2,10 +2,16 @@ using EmployeePortal.Data;
 using EmployeePortal.Models;
 using EmployeePortal.Repositories;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+
 using Rotativa.AspNetCore;
+using ServiceStack;
 using ServiceStack.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,6 +31,10 @@ builder.Services.AddDbContext<EmployeeDbContext>(options =>
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IPayslipRepository, PayslipRepository>();
+
+
+
+AppContext.SetSwitch("EPPlus.LicenseContext", true);
 
 
 

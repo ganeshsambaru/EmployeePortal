@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using Rotativa.AspNetCore;
 
 
@@ -206,9 +207,11 @@ namespace EmployeePortal.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExportExcel()
         {
+           
+
             var employees = await _repo.GetAllAsync();
 
-            using var package = new OfficeOpenXml.ExcelPackage();
+            using var package = new ExcelPackage();
             var worksheet = package.Workbook.Worksheets.Add("Employees");
 
             // Header row
@@ -243,8 +246,12 @@ namespace EmployeePortal.Controllers
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "EmployeeList.xlsx"
             );
-            return NotFound();
         }
+
+
+
+
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetGenderChartData()

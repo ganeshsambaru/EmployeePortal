@@ -136,5 +136,16 @@ namespace EmployeePortal.Repositories
                 .Include(e => e.AppUser)
                 .FirstOrDefaultAsync(e => e.AppUser.Username == username);
         }
+
+        public async Task<Employee> GetByAppUserIdAsync(string appUserId)
+        {
+            if (!int.TryParse(appUserId, out int parsedId))
+                return null;
+
+            return await _context.Employees
+                .FirstOrDefaultAsync(e => e.AppUserId == parsedId);
+        }
+
+
     }
 }
