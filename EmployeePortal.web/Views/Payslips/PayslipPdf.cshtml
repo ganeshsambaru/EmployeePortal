@@ -1,18 +1,119 @@
 ﻿@model EmployeePortal.Models.Payslip
-
 @{
-    Layout = null; // No layout for clean PDF
+    Layout = null; // For PDF rendering
 }
 
-<div style="font-family: Arial; padding: 20px;">
-    <h2 style="text-align: center;">Salary Payslip</h2>
-    <hr />
-    <p><strong>Employee Name:</strong> @Model.Employee.FullName</p>
-    <p><strong>Month:</strong> @Model.Month</p>
-    <p><strong>Year:</strong> @Model.Year</p>
-    <p><strong>Salary:</strong> ₹@Model.Salary</p>
-    <p><strong>Bonus:</strong> ₹@Model.Bonus</p>
-    <p><strong>Deductions:</strong> ₹@Model.Deductions</p>
-    <p><strong>Net Salary:</strong> ₹@Model.NetSalary</p>
-    <p><strong>Remarks:</strong> @Model.Remarks</p>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            margin: 40px;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .header h2 {
+                margin: 0;
+                color: #2c3e50;
+            }
+
+        .section-title {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 14px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+            .info-table td {
+                padding: 6px 8px;
+                border: 1px solid #ccc;
+            }
+
+                .info-table td.label {
+                    font-weight: bold;
+                    background-color: #f9f9f9;
+                    width: 30%;
+                }
+
+        .remarks {
+            margin-top: 20px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Salary Payslip</h2>
+        <div>@DateTime.Now.ToString("dd MMM yyyy")</div>
+    </div>
+
+    <div class="section-title">Employee Information</div>
+    <table class="info-table">
+        <tr>
+            <td class="label">Name</td>
+            <td>@Model.Employee.FullName</td>
+        </tr>
+        <tr>
+            <td class="label">Month</td>
+            <td>@Model.Month</td>
+        </tr>
+        <tr>
+            <td class="label">Year</td>
+            <td>@Model.Year</td>
+        </tr>
+    </table>
+
+    <div class="section-title">Salary Details</div>
+    <table class="info-table">
+        <tr>
+            <td class="label">Base Salary</td>
+            <td>₹ @Model.Salary.ToString("N2")</td>
+        </tr>
+        <tr>
+            <td class="label">Bonus</td>
+            <td>₹ @Model.Bonus.ToString("N2")</td>
+        </tr>
+        <tr>
+            <td class="label">Deductions</td>
+            <td>₹ @Model.Deductions.ToString("N2")</td>
+        </tr>
+        <tr>
+            <td class="label"><strong>Net Salary</strong></td>
+            <td><strong>₹ @Model.NetSalary.ToString("N2")</strong></td>
+        </tr>
+    </table>
+
+    @if (!string.IsNullOrEmpty(Model.Remarks))
+    {
+        <div class="remarks">
+            <strong>Remarks:</strong> @Model.Remarks
+        </div>
+    }
+
+    <div class="footer">
+        This is a computer-generated payslip and does not require signature.
+    </div>
+</body>
+</html>

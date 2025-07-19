@@ -5,7 +5,7 @@ namespace EmployeePortal.ViewModels
 {
     public class LeaveRequestCreateViewModel
     {
-        
+
 
         [Required]
         [DataType(DataType.Date)]

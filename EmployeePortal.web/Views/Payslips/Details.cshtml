@@ -1,13 +1,12 @@
-﻿@using EmployeePortal.Models
-@model EmployeePortal.Models.Payslip
+﻿@model EmployeePortal.Models.Payslip
 @{
     ViewData["Title"] = "Payslip Details";
 }
 
-<h2>Payslip Details</h2>
-
-<div class="card">
-    <div class="card-header bg-secondary text-white">Payslip for @Model.Employee.FullName</div>
+<div class="card shadow mt-4">
+    <div class="card-header bg-dark text-white">
+        <h4>Payslip Details for @Model.Employee.FullName</h4>
+    </div>
     <div class="card-body">
         <dl class="row">
             <dt class="col-sm-3">Month</dt>
@@ -16,17 +15,25 @@
             <dt class="col-sm-3">Year</dt>
             <dd class="col-sm-9">@Model.Year</dd>
 
-            <dt class="col-sm-3">Gross Salary</dt>
-            <dd class="col-sm-9">@Model.GrossSalary</dd>
+            <dt class="col-sm-3">Salary</dt>
+            <dd class="col-sm-9">@Model.Salary</dd>
+
+            <dt class="col-sm-3">Bonus</dt>
+            <dd class="col-sm-9">@Model.Bonus</dd>
 
             <dt class="col-sm-3">Deductions</dt>
             <dd class="col-sm-9">@Model.Deductions</dd>
 
+            <dt class="col-sm-3">Gross Salary</dt>
+            <dd class="col-sm-9">@Model.GrossSalary</dd>
+
             <dt class="col-sm-3">Net Salary</dt>
             <dd class="col-sm-9">@Model.NetSalary</dd>
-        </dl>
-        
 
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <dt class="col-sm-3">Remarks</dt>
+            <dd class="col-sm-9">@Model.Remarks</dd>
+        </dl>
+
+        <a asp-action="Index" class="btn btn-secondary mt-3">Back to List</a>
     </div>
 </div>

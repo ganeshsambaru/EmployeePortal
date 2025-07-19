@@ -8,8 +8,8 @@ namespace EmployeePortal.Repositories
     {
         Task<AppUser?> GetByUsernameAsync(string username);
         Task<bool> IsUsernameTakenAsync(string username);
-        
-        
+
+
         Task<AppUser> ValidateUserAsync(LoginViewModel vm);
         Task<AppUser> RegisterAsync(AppUser user);
 

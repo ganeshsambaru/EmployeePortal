@@ -52,7 +52,6 @@ namespace EmployeePortal.Controllers
         public async Task<IActionResult> Create()
         {
             var employees = await _employeeRepo.GetAllAsync();
-
             var viewModel = new PayslipViewModel
             {
                 EmployeeList = employees.Select(e => new SelectListItem
@@ -66,14 +65,23 @@ namespace EmployeePortal.Controllers
         }
 
 
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
+        
         public async Task<IActionResult> Create(PayslipViewModel vm)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Employees = await _employeeRepo.GetAllAsync();
-                return View(vm);
+                // 👇 Re-populate dropdown list before returning view
+                var employees = await _employeeRepo.GetAllAsync();
+                vm.EmployeeList = employees.Select(e => new SelectListItem
+                {
+                    Value = e.Id.ToString(),
+                    Text = e.FullName
+                });
+
+                return View(vm); // ✅ return with populated dropdown
             }
 
             var payslip = new Payslip
@@ -91,6 +99,7 @@ namespace EmployeePortal.Controllers
             TempData["Success"] = "Payslip created successfully!";
             return RedirectToAction("Index");
         }
+
 
         // 👨‍💼 Admin: Edit
         [Authorize(Roles = "Admin")]
@@ -171,22 +180,22 @@ namespace EmployeePortal.Controllers
             return RedirectToAction("Index");
         }
 
-       
 
-public async Task<IActionResult> DownloadPdf(int id)
-    {
-        var payslip = await _payslipRepo.GetByIdAsync(id);
-        if (payslip == null)
-            return NotFound();
 
-        // Include Employee details (if not already loaded)
-        payslip.Employee = await _employeeRepo.GetByIdAsync(payslip.EmployeeId);
-
-        return new ViewAsPdf("PayslipPdf", payslip)
+        public async Task<IActionResult> DownloadPdf(int id)
         {
-            FileName = $"Payslip_{payslip.Employee.FullName}_{payslip.Month}_{payslip.Year}.pdf"
-        };
-    }
+            var payslip = await _payslipRepo.GetByIdAsync(id);
+            if (payslip == null)
+                return NotFound();
+
+            // Include Employee details (if not already loaded)
+            payslip.Employee = await _employeeRepo.GetByIdAsync(payslip.EmployeeId);
+
+            return new ViewAsPdf("PayslipPdf", payslip)
+            {
+                FileName = $"Payslip_{payslip.Employee.FullName}_{payslip.Month}_{payslip.Year}.pdf"
+            };
+        }
         [Authorize]
         public async Task<IActionResult> Details(int id)
         {
@@ -207,7 +216,7 @@ public async Task<IActionResult> DownloadPdf(int id)
                 // Include more fields if needed
             };
 
-            return View(vm);
+            return View(payslip);
         }
 
 

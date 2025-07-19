@@ -3,43 +3,59 @@
     ViewData["Title"] = "My Payslips";
 }
 
-<h2 class="text-center my-4">My Payslips</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
 
-@if (Model.Any())
-{
-    <div class="table-responsive">
-        <table class="table table-hover align-middle shadow rounded">
-            <thead class="table-dark">
-                <tr>
-                    <th>Month</th>
-                    <th>Year</th>
-                    <th>Gross Salary</th>
-                    <th>Deductions</th>
-                    <th>Net Salary</th>
-                    <th>Download</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var payslip in Model)
-                {
-                    <tr>
-                        <td>@payslip.Month</td>
-                        <td>@payslip.Year</td>
-                        <td>₹ @payslip.GrossSalary.ToString("N2")</td>
-                        <td>₹ @payslip.Deductions.ToString("N2")</td>
-                        <td>₹ @payslip.NetSalary.ToString("N2")</td>
-                        <td>
-                            <a asp-action="DownloadPdf" asp-route-id="@payslip.Id" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-file-earmark-pdf"></i> DOWNLOAD PDF
-                            </a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="bi bi-wallet2 me-2"></i>My Payslips</h4>
+                </div>
+
+                <div class="card-body p-0">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Year</th>
+                                        <th>Gross Salary</th>
+                                        <th>Deductions</th>
+                                        <th>Net Salary</th>
+                                        <th>Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var payslip in Model)
+                                    {
+                                        <tr>
+                                            <td><span class="badge bg-secondary">@payslip.Month</span></td>
+                                            <td><span class="badge bg-light border">@payslip.Year</span></td>
+                                            <td>₹ @payslip.GrossSalary.ToString("N2")</td>
+                                            <td class="text-danger">₹ @payslip.Deductions.ToString("N2")</td>
+                                            <td class="text-success fw-bold">₹ @payslip.NetSalary.ToString("N2")</td>
+                                            <td>
+                                                <a asp-action="DownloadPdf" asp-route-id="@payslip.Id" class="btn btn-outline-danger btn-sm">
+                                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i>PDF
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info m-4 text-center">
+                            <i class="bi bi-info-circle"></i> No payslips available at the moment.
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
     </div>
-}
-else
-{
-    <div class="alert alert-info text-center">No payslips available at the moment.</div>
-}
+</div>

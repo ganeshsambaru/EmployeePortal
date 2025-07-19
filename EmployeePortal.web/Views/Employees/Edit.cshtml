@@ -1,71 +1,89 @@
 ﻿@model EmployeePortal.ViewModels.EmployeeEditViewModel
 
-<h2>Edit Employee</h2>
+@{
+    ViewData["Title"] = "Edit Employee";
+}
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="Id" />
-
-    <div class="form-group mt-2">
-        <label asp-for="FullName"></label>
-        <input asp-for="FullName" class="form-control" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+        <h4><i class="bi bi-person-lines-fill"></i> Edit Employee</h4>
     </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
+    <div class="card-body">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
 
-    <div class="form-group mt-2">
-        <label asp-for="Position"></label>
-        <input asp-for="Position" class="form-control" />
-    </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FullName" class="form-label"></label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="Department"></label>
-        <input asp-for="Department" class="form-control" />
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="HireDate"></label>
-        <input asp-for="HireDate" type="date" class="form-control" />
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Position" class="form-label"></label>
+                    <input asp-for="Position" class="form-control" />
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="DateOfBirth"></label>
-        <input asp-for="DateOfBirth" type="date" class="form-control" />
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Department" class="form-label"></label>
+                    <input asp-for="Department" class="form-control" />
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="Gender"></label>
-        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.Gender>()"></select>
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="HireDate" class="form-label"></label>
+                    <input asp-for="HireDate" type="date" class="form-control" />
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="EmployeeType"></label>
-        <select asp-for="EmployeeType" class="form-control" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.EmployeeType>()"></select>
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" />
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="Salary"></label>
-        <input asp-for="Salary" class="form-control" />
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Gender" class="form-label"></label>
+                    <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.Gender>()"></select>
+                </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="ProfileImage" class="form-label">Profile Photo</label>
-        <input asp-for="ProfileImage" type="file" class="form-control" />
-        @if (!string.IsNullOrEmpty(Model?.ProfileImagePath))
-        {
-            <img src="@Model.ProfileImagePath" class="mt-2 rounded" style="height: 80px;" />
-        }
-    </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="EmployeeType" class="form-label"></label>
+                    <select asp-for="EmployeeType" class="form-select" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.EmployeeType>()"></select>
+                </div>
 
-    <div class="mt-2">
-        <button class="btn btn-primary">Update</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Salary" class="form-label"></label>
+                    <input asp-for="Salary" class="form-control" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ProfileImage" class="form-label">Profile Photo</label>
+                    <input asp-for="ProfileImage" type="file" class="form-control" />
+                    @if (!string.IsNullOrEmpty(Model?.ProfileImagePath))
+                    {
+                        <div class="mt-2">
+                            <img src="@Model.ProfileImagePath" class="img-thumbnail" style="height: 80px;" />
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-start gap-2 mt-3">
+                <button class="btn btn-success">
+                    <i class="bi bi-check-circle-fill"></i> Update
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
     </div>
-    
-</form>
+</div>
 
 @section Scripts {
     @{

@@ -17,7 +17,7 @@ namespace EmployeePortal.ViewModels
 
         [Required]
         public AttendanceStatus Status { get; set; }
-        
+
         public List<Employee> Employees { get; set; } = new List<Employee>();// For dropdown
     }
 }

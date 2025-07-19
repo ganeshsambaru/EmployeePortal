@@ -3,27 +3,54 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
     <style>
         body {
-            font-family: Arial;
-            font-size: 12px;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 11px;
+            margin: 20px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
 
-        th, td {
-            border: 1px solid black;
-            padding: 5px;
+        th {
+            background-color: #f2f2f2;
+            color: #2c3e50;
+            padding: 8px;
+            border: 1px solid #999;
             text-align: left;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #999;
         }
     </style>
 </head>
 <body>
     <h2>Employee List</h2>
+
     <table>
         <thead>
             <tr>
@@ -31,7 +58,7 @@
                 <th>Email</th>
                 <th>Department</th>
                 <th>Position</th>
-                <th>Salary</th>
+                <th>Salary (₹)</th>
             </tr>
         </thead>
         <tbody>
@@ -42,10 +69,14 @@
                     <td>@emp.Email</td>
                     <td>@emp.Department</td>
                     <td>@emp.Position</td>
-                    <td>@emp.Salary.ToString("C")</td>
+                    <td>@emp.Salary.ToString("N2")</td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <div class="footer">
+        Generated on @DateTime.Now.ToString("dd MMM yyyy, hh:mm tt")
+    </div>
 </body>
 </html>

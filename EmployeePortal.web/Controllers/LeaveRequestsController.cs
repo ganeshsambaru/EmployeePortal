@@ -106,7 +106,7 @@ namespace EmployeePortal.Controllers
         }
 
         // Reject
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Reject(int id)
         {

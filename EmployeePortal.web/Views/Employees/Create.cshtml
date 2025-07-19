@@ -1,70 +1,82 @@
 ﻿@model EmployeePortal.ViewModels.EmployeeCreateViewModel
 
-<h2>Add New Employee</h2>
+@{
+    ViewData["Title"] = "Add New Employee";
+}
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label asp-for="FullName"></label>
-        <input asp-for="FullName" class="form-control" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
-    </div>
+<div class="card border-primary shadow-lg p-4 bg-light">
+    <h3 class="card-title text-primary mb-4 border-bottom pb-2">
+        <i class="bi bi-person-plus"></i> Add New Employee
+    </h3>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="row g-4">
 
-    <div class="form-group">
-        <label asp-for="Position"></label>
-        <input asp-for="Position" class="form-control" />
-    </div>
+        <div class="col-md-6">
+            <label asp-for="FullName" class="form-label fw-bold text-dark">Full Name</label>
+            <input asp-for="FullName" class="form-control border-primary" />
+            <span asp-validation-for="FullName" class="text-danger small"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Department"></label>
-        <input asp-for="Department" class="form-control" />
-    </div>
+        <div class="col-md-6">
+            <label asp-for="Email" class="form-label fw-bold text-dark">Email</label>
+            <input asp-for="Email" class="form-control border-primary" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="HireDate"></label>
-        <input asp-for="HireDate" type="date" class="form-control" />
-    </div>
+        <div class="col-md-6">
+            <label asp-for="Position" class="form-label fw-bold text-dark">Position</label>
+            <input asp-for="Position" class="form-control border-primary" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
-        <input asp-for="DateOfBirth" type="date" class="form-control" />
-    </div>
+        <div class="col-md-6">
+            <label asp-for="Department" class="form-label fw-bold text-dark">Department</label>
+            <input asp-for="Department" class="form-control border-primary" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Gender"></label>
-        <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.Gender>()"></select>
-    </div>
+        <div class="col-md-6">
+            <label asp-for="HireDate" class="form-label fw-bold text-dark">Hire Date</label>
+            <input asp-for="HireDate" type="date" class="form-control border-primary" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="EmployeeType"></label>
-        <select asp-for="EmployeeType" class="form-control" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.EmployeeType>()"></select>
-    </div>
+        <div class="col-md-6">
+            <label asp-for="DateOfBirth" class="form-label fw-bold text-dark">Date of Birth</label>
+            <input asp-for="DateOfBirth" type="date" class="form-control border-primary" />
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Salary"></label>
-        <input asp-for="Salary" class="form-control" />
-    </div>
+        <div class="col-md-6">
+            <label asp-for="Gender" class="form-label fw-bold text-dark">Gender</label>
+            <select asp-for="Gender" class="form-select border-primary" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.Gender>()"></select>
+        </div>
 
-    <div class="form-group mt-2">
-        <label asp-for="ProfileImage" class="form-label">Profile Photo</label>
-        <input asp-for="ProfileImage" type="file" class="form-control" />
-        @if (!string.IsNullOrEmpty(Model?.ProfileImagePath))
-        {
-            <img src="@Model.ProfileImagePath" class="mt-2 rounded" style="height: 80px;" />
-        }
-    </div>
+        <div class="col-md-6">
+            <label asp-for="EmployeeType" class="form-label fw-bold text-dark">Employee Type</label>
+            <select asp-for="EmployeeType" class="form-select border-primary" asp-items="Html.GetEnumSelectList<EmployeePortal.Models.EmployeeType>()"></select>
+        </div>
 
-    <button class="btn btn-success">Create</button>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <div class="col-md-6">
+            <label asp-for="Salary" class="form-label fw-bold text-dark">Salary</label>
+            <input asp-for="Salary" class="form-control border-primary" />
+        </div>
 
-</form>
+        <div class="col-md-6">
+            <label asp-for="ProfileImage" class="form-label fw-bold text-dark">Profile Photo</label>
+            <input asp-for="ProfileImage" type="file" class="form-control border-primary" />
+            @if (!string.IsNullOrEmpty(Model?.ProfileImagePath))
+            {
+                <img src="@Model.ProfileImagePath" class="mt-2 rounded shadow" style="height: 100px;" />
+            }
+        </div>
+
+        <div class="col-12 mt-3 d-flex gap-3">
+            <button type="submit" class="btn btn-success px-4">
+                <i class="bi bi-check-circle-fill"></i> Create
+            </button>
+            <a asp-action="Index" class="btn btn-secondary px-4">
+                <i class="bi bi-arrow-left-circle"></i> Back
+            </a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

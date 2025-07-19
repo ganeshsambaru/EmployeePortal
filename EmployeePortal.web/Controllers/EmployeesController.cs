@@ -23,10 +23,8 @@ namespace EmployeePortal.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(string searchName, string department, EmployeeType? employeeType, int page = 1)
+        public async Task<IActionResult> Index(string searchName, string department, EmployeeType? employeeType, int page = 1, int pageSize = 5)
         {
-            const int pageSize = 5;
-
             var (employees, totalCount) = await _repo.GetFilteredAsync(searchName, department, employeeType, page, pageSize);
 
             var allDepartments = await _repo.GetAllDepartmentsAsync();
@@ -39,7 +37,9 @@ namespace EmployeePortal.Controllers
                 EmployeeType = employeeType,
                 CurrentPage = page,
                 TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
-                AllDepartments = allDepartments
+                AllDepartments = allDepartments,
+                PageSize = pageSize,
+                TotalCount = totalCount
             };
 
             return View(vm);
@@ -207,7 +207,7 @@ namespace EmployeePortal.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ExportExcel()
         {
-           
+
 
             var employees = await _repo.GetAllAsync();
 

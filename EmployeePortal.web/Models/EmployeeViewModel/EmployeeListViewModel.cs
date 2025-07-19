@@ -11,6 +11,10 @@ namespace EmployeePortal.ViewModels
         public string SearchName { get; set; }
         public string Department { get; set; }
         public EmployeeType? EmployeeType { get; set; }
+        public int PageSize { get; set; }
+        public int TotalCount { get; set; } // ✅ Total employees after filtering
+
+
 
         // Pagination
         public int CurrentPage { get; set; }

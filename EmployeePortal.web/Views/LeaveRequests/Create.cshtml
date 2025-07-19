@@ -4,30 +4,58 @@
     ViewData["Title"] = "Submit Leave Request";
 }
 
-<h2>Submit Leave Request</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="FromDate" class="form-label"></label>
-        <input asp-for="FromDate" type="date" class="form-control" />
-        <span asp-validation-for="FromDate" class="text-danger"></span>
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Submit Leave Request</h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="FromDate" class="form-label">From Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                <input asp-for="FromDate" type="date" class="form-control" />
+                            </div>
+                            <span asp-validation-for="FromDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ToDate" class="form-label">To Date</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-calendar-week"></i></span>
+                                <input asp-for="ToDate" type="date" class="form-control" />
+                            </div>
+                            <span asp-validation-for="ToDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Reason" class="form-label">Reason</label>
+                            <textarea asp-for="Reason" rows="4" class="form-control" placeholder="Enter your reason for leave..."></textarea>
+                            <span asp-validation-for="Reason" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send"></i> Submit Request
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="ToDate" class="form-label"></label>
-        <input asp-for="ToDate" type="date" class="form-control" />
-        <span asp-validation-for="ToDate" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Reason" class="form-label"></label>
-        <textarea asp-for="Reason" class="form-control"></textarea>
-        <span asp-validation-for="Reason" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

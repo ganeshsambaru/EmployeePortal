@@ -1,130 +1,143 @@
 ﻿@model EmployeePortal.ViewModels.EmployeeListViewModel
 
 @{
-    ViewData["Title"] = "Employees";
+    ViewData["Title"] = "Employee List";
 }
 
-<h2>Employees</h2>
+<div class="container">
 
-<!-- Search & Filter Form -->
-<form method="get" asp-action="Index" class="row mb-4 g-3 align-items-end">
-    <div class="col-md-4">
-        <label class="form-label">Search by Name</label>
-        <input name="searchName" value="@Model.SearchName" class="form-control" placeholder="Enter name" />
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary"><i class="bi bi-people-fill"></i> Employee List</h2>
+        <div>
+            <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-circle"></i> Create New Employee</a>
+        </div>
     </div>
 
-    <div class="col-md-3">
-        <label class="form-label">Filter by Department</label>
-        <select name="department" class="form-select">
-            <option value="">-- All Departments --</option>
-            @foreach (var dept in Model.AllDepartments)
-            {
-                if (Model.Department == dept)
+    <!-- Filter Section -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white">
+            <i class="bi bi-filter-circle"></i> Filter Employees
+            <span class="float-end">Total Employees: <strong>@Model.TotalCount</strong></span>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="Index" class="row g-3 align-items-end">
+
+                <div class="col-md-3">
+                    <label class="form-label"><i class="bi bi-search"></i> Search by Name</label>
+                    <input name="searchName" value="@Model.SearchName" class="form-control" placeholder="Type a name..." />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label"><i class="bi bi-building"></i> Department</label>
+                    <select name="department" class="form-select">
+                        <option value="">All Departments</option>
+                        @foreach (var dept in Model.AllDepartments)
+                        {
+                            <option value="@dept" selected="@(Model.Department == dept ? "selected" : null)">@dept</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label"><i class="bi bi-people"></i> Employee Type</label>
+                    <select name="employeeType" class="form-select">
+                        <option value="">All Employee Types</option>
+                        @foreach (var type in Enum.GetValues(typeof(EmployeePortal.Models.EmployeeType)))
+                        {
+                            var value = type.ToString();
+                            <option value="@value" selected="@(Model.EmployeeType?.ToString() == value ? "selected" : null)">
+                                @value
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label"><i class="bi bi-list-ol"></i> Items per page</label>
+                    <input type="number" name="pageSize" class="form-control" value="@Model.PageSize" />
+                </div>
+
+                <div class="col-md-1 d-grid">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-funnel"></i> Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Export Buttons -->
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="mb-3 d-flex gap-2">
+            <a asp-action="ExportPdf" class="btn btn-outline-danger"><i class="bi bi-file-earmark-pdf"></i> Export PDF</a>
+            <a asp-action="ExportExcel" class="btn btn-outline-success"><i class="bi bi-file-earmark-excel"></i> Export Excel</a>
+        </div>
+    }
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th><i class="bi bi-person-badge-fill"></i> Name</th>
+                    <th><i class="bi bi-envelope-fill"></i> Email</th>
+                    <th><i class="bi bi-briefcase-fill"></i> Designation</th>
+                    <th><i class="bi bi-diagram-3-fill"></i> Department</th>
+                    <th><i class="bi bi-gender-ambiguous"></i> Gender</th>
+                    <th><i class="bi bi-person-lines-fill"></i> Employee Type</th>
+                    <th><i class="bi bi-gear-fill"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emp in Model.Employees)
                 {
-                    @:
-                    <option value="@dept" selected>@dept</option>
+                    <tr>
+                        <td>@emp.FullName</td>
+                        <td>@emp.Email</td>
+                        <td>@emp.Position</td>
+                        <td>@emp.Department</td>
+                        <td>@emp.Gender</td>
+                        <td>@emp.EmployeeType</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@emp.Id" class="btn btn-info btn-sm"><i class="bi bi-eye"></i></a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></a>
+                                <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></a>
+                            }
+                        </td>
+                    </tr>
                 }
-                else
-                {
-                    @:
-                    <option value="@dept">@dept</option>
-                }
-            }
-        </select>
-
-
+            </tbody>
+        </table>
     </div>
 
-    <div class="col-md-3">
-        <label class="form-label">Filter by Employee Type</label>
-        <select name="employeeType" class="form-select">
-            <option value="">-- All Types --</option>
-            @foreach (var type in Enum.GetValues(typeof(EmployeePortal.Models.EmployeeType)))
-            {
-                var value = type.ToString();
-                if (Model.EmployeeType?.ToString() == value)
-                {
-                    @:
-                    <option value="@value" selected>@value</option>
-                }
-                else
-                {
-                    @:
-                    <option value="@value">@value</option>
-                }
-            }
-        </select>
-
-
-    </div>
-
-    <div class="col-md-2">
-        <button class="btn btn-primary w-100">Filter</button>
-    </div>
-</form>
-
-<!-- Add Button -->
-@if (User.IsInRole("Admin"))
-{
-    <div class="mb-3 d-flex gap-2">
-        <a asp-action="Create" class="btn btn-success">+ Add Employee</a>
-        <a asp-action="ExportPdf" class="btn btn-outline-danger">Export PDF</a>
-        <a asp-action="ExportExcel" class="btn btn-outline-success">Export Excel</a>
-    </div>
-}
-
-<!-- Employee Table -->
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Position</th>
-            <th>Department</th>
-            <th>Type</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var emp in Model.Employees)
-        {
-            <tr>
-                <td>@emp.FullName</td>
-                <td>@emp.Email</td>
-                <td>@emp.Position</td>
-                <td>@emp.Department</td>
-                <td>@emp.EmployeeType</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@emp.Id" class="btn btn-info btn-sm">View</a>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-danger btn-sm">Delete</a>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<!-- Pagination -->
-@if (Model.TotalPages > 1)
-{
-    <nav>
-        <ul class="pagination">
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link"
-                       asp-action="Index"
-                       asp-route-page="@i"
-                       asp-route-searchName="@Model.SearchName"
-                       asp-route-department="@Model.Department"
-                       asp-route-employeeType="@Model.EmployeeType">
-                        @i
-                    </a>
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="1" asp-route-pageSize="@Model.PageSize">First</a>
                 </li>
-            }
-        </ul>
-    </nav>
-}
+                <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                </li>
+                <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@Model.TotalPages" asp-route-pageSize="@Model.PageSize">Last</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

@@ -23,7 +23,7 @@ namespace EmployeePortal.Repositories
             await _context.SaveChangesAsync();
         }
 
-       
+
 
         public async Task<bool> IsUsernameTakenAsync(string username)
         {

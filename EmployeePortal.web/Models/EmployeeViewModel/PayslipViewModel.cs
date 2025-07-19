@@ -1,5 +1,4 @@
-﻿using EmployeePortal.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace EmployeePortal.ViewModels
@@ -29,10 +28,10 @@ namespace EmployeePortal.ViewModels
 
         public string Remarks { get; set; } = string.Empty;
 
-        public decimal GrossSalary => Salary + Bonus - Deductions;
-        public decimal NetSalary => Salary + Bonus - Deductions;
+        // ✅ Calculated properties
+        public decimal GrossSalary => Salary + Bonus;
+        public decimal NetSalary => GrossSalary - Deductions;
 
         public IEnumerable<SelectListItem> EmployeeList { get; set; } = new List<SelectListItem>();
-
     }
 }

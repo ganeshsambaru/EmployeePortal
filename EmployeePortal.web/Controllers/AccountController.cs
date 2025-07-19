@@ -50,7 +50,7 @@ namespace EmployeePortal.Controllers
 
             await HttpContext.SignInAsync("MyCookieAuth", principal);
 
-            
+
             if (user.Role == "Admin")
             {
                 return RedirectToAction("Dashboard", "Employees");
@@ -116,7 +116,7 @@ namespace EmployeePortal.Controllers
             }
 
 
-           // TempData["Success"] = "Registration successful! Please login.";
+            // TempData["Success"] = "Registration successful! Please login.";
             return RedirectToAction("Login");
         }
 
